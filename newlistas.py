@@ -388,32 +388,32 @@ class LinkedList(object):
                     print x[1], x[0]
 
 
-
-lista = LinkedList()
-lista.append(23)
-lista.append(50)
-lista.append(1)
-lista.append(-2)
-lista.append(3)
-lista.append(-9)
-lista.append(0)
-lista.append(5)
-lista.append(-1)
-lista.append(777)
-lista.append(99)
-lista.remove(0) # by index, the 0 is the number 23
-lista.delete(50) # by data
-lista.remove_condition('<1') # by condition
-lista.multiple_modify('5,3','999,999') # search 5 and 3, then replace by 999, 999 according to case
-lista.multiple_modify_condition('==999',111) # replaces all equivalent numbers to 999, by 111
-lista.insert(1,'4444')
-lista.show()
-print '=========Invertido============='
-lista.show(reverse=True)
-print '=========Ordenado============='
-lista.show(reverse=False, sorter=True)
-print '**********'
-print lista, 'all data order by index'
-print lista[0], 'index 0'
-print lista[-1], 'reversing, ultimate value of index'
-print lista[0:3],'values in range 0 , 3' # warning no supports negative index in multiple slices
+if __name__ == "__main__":
+    lista = LinkedList()
+    lista.append(23)
+    lista.append(50)
+    lista.append(1)
+    lista.append(-2)
+    lista.append(3)
+    lista.append(-9)
+    lista.append(0)
+    lista.append(5)
+    lista.append(-1)
+    lista.append(777)
+    lista.append(99)
+    lista.remove(0) # by index, the 0 is the number 23
+    lista.delete(50) # by data
+    lista.remove_condition('<1') # by condition
+    lista.multiple_modify('5,3','999,999') # search 5 and 3, then replace by 999, 999 according to case
+    lista.multiple_modify_condition('==999',111) # replaces all equivalent numbers to 999, by 111
+    lista.insert(1,'4444')
+    lista.show()
+    print '=========Invertido============='
+    lista.show(reverse=True)
+    print '=========Ordenado============='
+    lista.show(reverse=False, sorter=True)
+    print '**********'
+    print lista, 'all data order by index'
+    print lista[0], 'index 0'
+    print lista[-1], 'reversing, ultimate value of index'
+    print lista[0:3],'values in range 0 , 3' # warning no supports negative index in multiple slices

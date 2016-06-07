@@ -1,4 +1,5 @@
-import pickle
+import cPickle as pickle
+from newlistas import LinkedList, Node
 
 class Estudiante(object):
     identificacion = 0
@@ -17,9 +18,9 @@ class Estudiante(object):
 
 class Registrar:
 
-    lista_estudiante = []
-    lista_privado = []
-    lista_usuariofinal = []
+    lista_estudiantes = LinkedList()
+    lista_privado = LinkedList()
+    lista_usuariofinal = LinkedList()
     flag_validar = True
 
     def __init__(self, Estudiante_datos):
@@ -34,24 +35,40 @@ class Registrar:
             self.generar_dic()
             self.crear_listas()
             self.crear_usuariofinal()
-            Consultar(self)
-
+        else:
+            pickle.dump(self.lista_estudiantes, self.mylista_estudiantes,-1)
+            pickle.dump(self.lista_privado, self.mylista_privado,-1)
+            pickle.dump(self.lista_usuariofinal, self.mylista_usuariofinal,-1)
+            self.mylista_estudiantes.close()
+            self.mylista_privado.close()
+            self.mylista_usuariofinal.close()
     def archivo(self):
         import os.path
-        if os.path.isfile('database'):
-            self.myfile = open('database','r')
-            self.lista_estudiante = pickle.load(self.myfile)
-            self.lista_privado = pickle.load(self.myfile)
-            self.lista_usuariofinal = pickle.load(self.myfile)
+        if os.path.isfile('lista_estudiantes'):
+            self.mylista_estudiantes = open('lista_estudiantes','r')
+            self.lista_estudiantes = pickle.load(self.mylista_estudiantes)
+            self.mylista_estudiantes.close()
+
+            self.mylista_privado = open('lista_privado','r')
+            self.lista_privado = pickle.load(self.mylista_privado)
+            self.mylista_privado.close()
+
+            self.mylista_usuariofinal = open('lista_usuariofinal','r')
+            self.lista_usuariofinal = pickle.load(self.mylista_usuariofinal)
+            self.mylista_usuariofinal.close()
+
+            self.mylista_estudiantes = open('lista_estudiantes','wb')
+            self.mylista_privado = open('lista_privado','wb')
+            self.mylista_usuariofinal = open('lista_usuariofinal','wb')
         else:
-            self.myfile = open('database','w')
+            self.mylista_estudiantes = open('lista_estudiantes','wb')
+            self.mylista_privado = open('lista_privado','wb')
+            self.mylista_usuariofinal = open('lista_usuariofinal','wb')
 
     def verificar(self):
         identificacion = self.E.identificacion
-        for x in self.lista_estudiante:
+        for x in self.lista_estudiantes[:]:
             if identificacion in x.values():
-                import ipdb; ipdb.set_trace() # BREAKPOINT
-
                 print ("El usuario ya esta repetido")
                 self.flag_validar = False
 
@@ -87,15 +104,17 @@ class Registrar:
         self.dic_privado = dic_privado
 
     def crear_listas(self):
-        self.lista_estudiante.append(self.dic_estudiantes)
+        self.lista_estudiantes.append(self.dic_estudiantes)
         self.lista_privado.append(self.dic_privado)
-        pickle.dump(self.lista_estudiante, self.myfile)
-        pickle.dump(self.lista_privado, self.myfile)
+        pickle.dump(self.lista_estudiantes, self.mylista_estudiantes,-1)
+        self.mylista_estudiantes.close()
+        pickle.dump(self.lista_privado, self.mylista_privado,-1)
+        self.mylista_privado.close()
 
     def crear_usuariofinal(self):
         from datetime import date
-        ultimo_dic_estudiantes = self.lista_estudiante[-1]
-        ultimo_dic_privado = self.lista_privado[-1]
+        ultimo_dic_estudiantes = self.lista_estudiantes[-1][0]
+        ultimo_dic_privado = self.lista_privado[-1][0]
         ultimo_dic_estudiantes.update(ultimo_dic_privado)
 
         fecha = date.today()
@@ -105,22 +124,33 @@ class Registrar:
         dic_fecha = {"fecha":fecha}
         ultimo_dic_estudiantes.update(dic_fecha) # agregar fecha el diccionario
         self.lista_usuariofinal.append(ultimo_dic_estudiantes)
-        pickle.dump(self.lista_usuariofinal, self.myfile)
-
+        pickle.dump(self.lista_usuariofinal, self.mylista_usuariofinal,-1)
+        self.mylista_usuariofinal.close()
 class Consultar:
-    def __init__(self,obj):
-        pass
+    def __init__(self):
+        self.mylista_estudiantes = open('lista_estudiantes','rb')
+        self.lista_estudiantes = pickle.load(self.mylista_estudiantes)
+        self.mylista_estudiantes.close()
 
-    def obtener_estudiantes():
-        pass
+        self.mylista_privado = open('lista_privado','rb')
+        self.lista_privado = pickle.load(self.mylista_privado)
+        self.mylista_privado.close()
 
-    def obtener_privado():
-        pass
+        self.mylista_usuariofinal = open('lista_usuariofinal','rb')
+        self.lista_usuariofinal = pickle.load(self.mylista_usuariofinal)
+        self.mylista_usuariofinal.close()
 
-    def obtener_usuarios():
-        pass
+    def obtener_estudiantes(self):
+        return self.lista_estudiantes[:]
+
+    def obtener_privado(self):
+        return self.lista_privado[:]
+
+    def obtener_usuarios(self):
+        return self.lista_usuariofinal[:]
+
 
 Estudiante('Juma','Gapacho','888654','15451')
-
-
+Estudiante('Juma','Gapacho','777888654','15451')
+import ipdb; ipdb.set_trace() # BREAKPOINT
 
