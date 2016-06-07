@@ -36,34 +36,22 @@ class Registrar:
             self.crear_listas()
             self.crear_usuariofinal()
         else:
-            pickle.dump(self.lista_estudiantes, self.mylista_estudiantes,-1)
-            pickle.dump(self.lista_privado, self.mylista_privado,-1)
-            pickle.dump(self.lista_usuariofinal, self.mylista_usuariofinal,-1)
-            self.mylista_estudiantes.close()
-            self.mylista_privado.close()
-            self.mylista_usuariofinal.close()
+            pickle.dump(self.lista_estudiantes, self.myfile,-1)
+            pickle.dump(self.lista_privado, self.myfile,-1)
+            pickle.dump(self.lista_usuariofinal, self.myfile,-1)
+            self.myfile.close()
     def archivo(self):
         import os.path
-        if os.path.isfile('lista_estudiantes'):
-            self.mylista_estudiantes = open('lista_estudiantes','r')
-            self.lista_estudiantes = pickle.load(self.mylista_estudiantes)
-            self.mylista_estudiantes.close()
+        if os.path.isfile('database'):
+            self.myfile = open('database','r+')
+            self.lista_estudiantes = pickle.load(self.myfile)
+            self.lista_privado = pickle.load(self.myfile)
+            self.lista_usuariofinal = pickle.load(self.myfile)
+            self.myfile.close()
+            self.myfile = open('database','w')
 
-            self.mylista_privado = open('lista_privado','r')
-            self.lista_privado = pickle.load(self.mylista_privado)
-            self.mylista_privado.close()
-
-            self.mylista_usuariofinal = open('lista_usuariofinal','r')
-            self.lista_usuariofinal = pickle.load(self.mylista_usuariofinal)
-            self.mylista_usuariofinal.close()
-
-            self.mylista_estudiantes = open('lista_estudiantes','wb')
-            self.mylista_privado = open('lista_privado','wb')
-            self.mylista_usuariofinal = open('lista_usuariofinal','wb')
         else:
-            self.mylista_estudiantes = open('lista_estudiantes','wb')
-            self.mylista_privado = open('lista_privado','wb')
-            self.mylista_usuariofinal = open('lista_usuariofinal','wb')
+            self.myfile = open('database','wb')
 
     def verificar(self):
         identificacion = self.E.identificacion
@@ -106,10 +94,8 @@ class Registrar:
     def crear_listas(self):
         self.lista_estudiantes.append(self.dic_estudiantes)
         self.lista_privado.append(self.dic_privado)
-        pickle.dump(self.lista_estudiantes, self.mylista_estudiantes,-1)
-        self.mylista_estudiantes.close()
-        pickle.dump(self.lista_privado, self.mylista_privado,-1)
-        self.mylista_privado.close()
+        pickle.dump(self.lista_estudiantes, self.myfile,-1)
+        pickle.dump(self.lista_privado, self.myfile,-1)
 
     def crear_usuariofinal(self):
         from datetime import date
@@ -124,22 +110,15 @@ class Registrar:
         dic_fecha = {"fecha":fecha}
         ultimo_dic_estudiantes.update(dic_fecha) # agregar fecha el diccionario
         self.lista_usuariofinal.append(ultimo_dic_estudiantes)
-        pickle.dump(self.lista_usuariofinal, self.mylista_usuariofinal,-1)
-        self.mylista_usuariofinal.close()
+        pickle.dump(self.lista_usuariofinal, self.myfile,-1)
+        self.myfile.close()
 class Consultar:
     def __init__(self):
-        self.mylista_estudiantes = open('lista_estudiantes','rb')
-        self.lista_estudiantes = pickle.load(self.mylista_estudiantes)
-        self.mylista_estudiantes.close()
-
-        self.mylista_privado = open('lista_privado','rb')
-        self.lista_privado = pickle.load(self.mylista_privado)
-        self.mylista_privado.close()
-
-        self.mylista_usuariofinal = open('lista_usuariofinal','rb')
-        self.lista_usuariofinal = pickle.load(self.mylista_usuariofinal)
-        self.mylista_usuariofinal.close()
-
+        self.myfile = open('database','r')
+        self.lista_estudiantes = pickle.load(self.myfile)
+        self.lista_privado = pickle.load(self.myfile)
+        self.lista_usuariofinal = pickle.load(self.myfile)
+        self.myfile.close()
     def obtener_estudiantes(self):
         return self.lista_estudiantes[:]
 
