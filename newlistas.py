@@ -117,16 +117,17 @@ class LinkedList(object):
                 while current and found is False:
             # end rest
             # search and delete value
-                    if current.get_data() == data:
+                    if current.get_index() == index-1:
                         #TODO Change data by index
                         found = True
                         self.head.len += 1
                         #self.pulse = True
-                        current = current.get_next()
-                        new_node.index = self.len
+                        ##current = current.get_next()
                         new_node.len =  current.index+1
-                        new_node.set_next(current.get_next())
-                        current.set_next(new_node)
+                        new_node.set_next(current)
+                        previous.set_next(new_node)
+                        #new_node.set_next(current.get_next())
+                        #current.set_next(new_node)
                     else:
                         previous = current
                         current = current.get_next()

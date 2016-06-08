@@ -110,6 +110,9 @@ class Registrar:
         dic_fecha = {"fecha":fecha}
         ultimo_dic_estudiantes.update(dic_fecha) # agregar fecha el diccionario
         self.lista_usuariofinal.append(ultimo_dic_estudiantes)
+        #import ipdb; ipdb.set_trace() # BREAKPOINT
+        #self.lista_usuariofinal.insert(1,ultimo_dic_estudiantes)
+        #TODO change insert
         pickle.dump(self.lista_usuariofinal, self.myfile,-1)
         self.myfile.close()
 
@@ -141,31 +144,68 @@ class Modificar:
         self.myfile.close()
         self.myfile = open('database','w')
 
-    def modificar_estudiantes(self, dic, newdic):
-        self.abrir()
-        self.lista_estudiantes.modify(dic,newdic)
+    def cerrar(self):
         pickle.dump(self.lista_estudiantes, self.myfile, -1)
         pickle.dump(self.lista_privado, self.myfile, -1)
         pickle.dump(self.lista_usuariofinal, self.myfile, -1)
         self.myfile.close()
+
+    def modificar_estudiantes(self, dic, newdic):
+        self.abrir()
+        self.lista_estudiantes.modify(dic,newdic)
+        self.cerrar()
 
     def modificar_privado(self, dic, newdic):
         self.abrir()
         self.lista_privado.modify(dic,newdic)
-        pickle.dump(self.lista_estudiantes, self.myfile, -1)
-        pickle.dump(self.lista_privado, self.myfile, -1)
-        pickle.dump(self.lista_usuariofinal, self.myfile, -1)
-        self.myfile.close()
-
+        self.cerrar()
     def modificar_usuarios(self, dic, newdic):
         self.abrir()
         self.lista_usuariofinal.modify(dic,newdic)
-        pickle.dump(self.lista_estudiantes, self.myfile, -1)
-        pickle.dump(self.lista_privado, self.myfile, -1)
-        pickle.dump(self.lista_usuariofinal, self.myfile, -1)
-        self.myfile.close()
+        self.cerrar()
+
+    def buscar(self,parametro): # 'key:value'
+        self.abrir()
+        parametro = parametro.split(':')
+        for number,x in enumerate(self.lista_usuariofinal[:]):
+            for key,value in x.iteritems():
+                if parametro[0] in key:
+                    if parametro[1] in value:
+                        self.cerrar()
+                        self.posicion = number
+                        self.valor_dictmp = x
+                        print 'paso por aqui'
+                        return x
+        self.posicion = None
+        print 'No se encontro el usuario'
+        self.cerrar()
+
+    def buscar_modificar(self,parametro, datonuevo): # 'key:value'
+        nuevoparametro = parametro.split(':')
+        from copy import deepcopy
+        self.buscar(parametro) # esto es para sacar el self.valor_dictmp
+        dic = deepcopy(self.valor_dictmp)
+        dic[nuevoparametro[0]]= datonuevo
+        self.abrir()
+        self.lista_usuariofinal.modify(self.valor_dictmp, dic)
+        self.cerrar()
+
+    def eliminar_por_parametro(self,parametro):
+        self.buscar(parametro) # esto es para sacar el self.posicion
+        if self.posicion is not None:
+            self.abrir()
+            self.lista_estudiantes.remove(self.posicion)
+            self.lista_privado.remove(self.posicion)
+            self.lista_usuariofinal.remove(self.posicion)
+            self.cerrar()
+        else:
+            print 'Lo que usted quiere eliminar no existe'
+
+
+
+
 
 Estudiante('Juma','Gapacho','888654','15451')
 Estudiante('Juma','Gapacho','777888654','15451')
 import ipdb; ipdb.set_trace() # BREAKPOINT
-
+#Estudiante('iiiiiiiiiJuma','aaaaaaGapacho','44232777888654','15451')
