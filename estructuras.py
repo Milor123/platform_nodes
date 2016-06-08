@@ -112,6 +112,7 @@ class Registrar:
         self.lista_usuariofinal.append(ultimo_dic_estudiantes)
         pickle.dump(self.lista_usuariofinal, self.myfile,-1)
         self.myfile.close()
+
 class Consultar:
     def __init__(self):
         self.myfile = open('database','r')
@@ -128,6 +129,41 @@ class Consultar:
     def obtener_usuarios(self):
         return self.lista_usuariofinal[:]
 
+class Modificar:
+    def __init__(self):
+        pass
+
+    def abrir(self):
+        self.myfile = open('database','r')
+        self.lista_estudiantes = pickle.load(self.myfile)
+        self.lista_privado = pickle.load(self.myfile)
+        self.lista_usuariofinal = pickle.load(self.myfile)
+        self.myfile.close()
+        self.myfile = open('database','w')
+
+    def modificar_estudiantes(self, dic, newdic):
+        self.abrir()
+        self.lista_estudiantes.modify(dic,newdic)
+        pickle.dump(self.lista_estudiantes, self.myfile, -1)
+        pickle.dump(self.lista_privado, self.myfile, -1)
+        pickle.dump(self.lista_usuariofinal, self.myfile, -1)
+        self.myfile.close()
+
+    def modificar_privado(self, dic, newdic):
+        self.abrir()
+        self.lista_privado.modify(dic,newdic)
+        pickle.dump(self.lista_estudiantes, self.myfile, -1)
+        pickle.dump(self.lista_privado, self.myfile, -1)
+        pickle.dump(self.lista_usuariofinal, self.myfile, -1)
+        self.myfile.close()
+
+    def modificar_usuarios(self, dic, newdic):
+        self.abrir()
+        self.lista_usuariofinal.modify(dic,newdic)
+        pickle.dump(self.lista_estudiantes, self.myfile, -1)
+        pickle.dump(self.lista_privado, self.myfile, -1)
+        pickle.dump(self.lista_usuariofinal, self.myfile, -1)
+        self.myfile.close()
 
 Estudiante('Juma','Gapacho','888654','15451')
 Estudiante('Juma','Gapacho','777888654','15451')
