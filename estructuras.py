@@ -8,11 +8,12 @@ class Estudiante(object):
     edad = ""
 
 
-    def __init__(self, nombres, apellidos, identificacion, edad):
+    def __init__(self, nombres, apellidos, identificacion, edad, insertar=None):
         self.nombres= nombres
         self.apellidos = apellidos
         self.identificacion = identificacion
         self.edad = edad
+        self.insertar = insertar
         Registrar(self)
 
 
@@ -26,6 +27,7 @@ class Registrar:
     def __init__(self, Estudiante_datos):
         self.flag_validar = True
         self.E = Estudiante_datos
+        self.insertar = self.E.insertar
         self.archivo()
         self.verificar()
         if self.flag_validar: # Verificar si la identifican no ha sido repetida
@@ -123,9 +125,12 @@ class Registrar:
         Este metodo introduce los diccinarios en las listas y luego los
         guarda en el archivo plano
         """
-
-        self.lista_estudiantes.append(self.dic_estudiantes)
-        self.lista_privado.append(self.dic_privado)
+        if self.insertar is None:
+            self.lista_estudiantes.append(self.dic_estudiantes)
+            self.lista_privado.append(self.dic_privado)
+        else: # si el usuario paso el indice para insertar
+            self.lista_estudiantes.insert(self.insertar, self.dic_estudiantes)
+            self.lista_privado.insert(self.insertar, self.dic_privado)
         pickle.dump(self.lista_estudiantes, self.myfile,-1)
         pickle.dump(self.lista_privado, self.myfile,-1)
 
@@ -146,7 +151,10 @@ class Registrar:
                                      fecha.day)
         dic_fecha = {"fecha":fecha}
         ultimo_dic_estudiantes.update(dic_fecha) # agregar fecha el diccionario
-        self.lista_usuariofinal.append(ultimo_dic_estudiantes)
+        if self.insertar is None:
+            self.lista_usuariofinal.append(ultimo_dic_estudiantes)
+        else:
+            self.lista_usuariofinal.insert(self.insertar, ultimo_dic_estudiantes)
         #import ipdb; ipdb.set_trace() # BREAKPOINT
         #self.lista_usuariofinal.insert(1,ultimo_dic_estudiantes)
         #TODO change insert
@@ -265,6 +273,11 @@ class Modificar:
         self.posicion = None
         print 'No se encontro el usuario'
         self.cerrar()
+
+
+    ##NOTA: los siguientes tres algoritmos (buscar_modificar, eliminar_por_parameto... )
+    ##consultan en lista_usuariofinal...
+
 
     def buscar_modificar(self,parametro, datonuevo): # 'key:value'
         """
