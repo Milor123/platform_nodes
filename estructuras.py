@@ -294,7 +294,6 @@ class Modificar:
         """
         self.buscar(parametro) # esto es para sacar el self.posicion
         if self.posicion is not None:
-        """
             self.abrir()
             self.lista_estudiantes.remove(self.posicion)
             self.lista_privado.remove(self.posicion)
