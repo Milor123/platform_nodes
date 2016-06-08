@@ -159,21 +159,29 @@ class Consultar:
         Este constructur se encarga de cargar los datos de database
         para que los metodos obtener, puedan devolver la informacion
         """
+        self.leer_datos()
+
+    def leer_datos(self):
         self.myfile = open('database','r')
         self.lista_estudiantes = pickle.load(self.myfile)
         self.lista_privado = pickle.load(self.myfile)
         self.lista_usuariofinal = pickle.load(self.myfile)
         self.myfile.close()
+
+
     def obtener_estudiantes(self):
         """Este metodo devuelve la informacion de la lista_estudiantes"""
+        self.leer_datos()
         return self.lista_estudiantes[:]
 
     def obtener_privado(self):
         """Igual que el anterior pero con la lista_privado"""
+        self.leer_datos()
         return self.lista_privado[:]
 
     def obtener_usuarios(self):
         """Igual que el anteriror pero con la lista_usuariofinal"""
+        self.leer_datos()
         return self.lista_usuariofinal[:]
 
 class Modificar:
@@ -302,6 +310,19 @@ class Modificar:
         else:
             print 'Lo que usted quiere eliminar no existe'
 
+    def eliminar_por_parametro_todos(self,parametro):
+        """
+        Este metodo es igual al anterior, con la diferencia que borra todos datos que coincidan
+        es decir, si buscamos 'apellidos:bohorquez', borrara todos los bohorquez, asi este varias veces
+        """
+        self.posicion = 'xxx'
+        while self.posicion is not None:
+            self.buscar(parametro)
+            self.abrir()
+            self.lista_estudiantes.remove(self.posicion)
+            self.lista_privado.remove(self.posicion)
+            self.lista_usuariofinal.remove(self.posicion)
+            self.cerrar()
 
 
 
